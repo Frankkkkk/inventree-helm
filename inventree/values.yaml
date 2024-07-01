@@ -50,7 +50,7 @@ database:
   database: inventree
 
   persistentVolume:
-    accessMode: ReadWriteOnce
+    accessModes: ReadWriteOnce
     size: 8Gi
     storageClass: ""
 
