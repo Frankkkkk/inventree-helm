@@ -1,30 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "inventree.fullname" . }}-server
+  name: {{ include "inventree.fullname" . }}-worker
   labels:
-    app: server
+    app: worker
     {{- include "inventree.labels" . | nindent 4 }}
 spec:
 # {{- if not .Values.autoscaling.enabled }}
 # replicas: {{ .Values.replicaCount }}
 # {{- end }}
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
-      app: server
+      app: worker
       {{- include "inventree.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.server.podAnnotations }}
+      {{- with .Values.worker.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        app: server
+        app: worker
         {{- include "inventree.labels" . | nindent 8 }}
-        {{- with .Values.server.podLabels }}
+        {{- with .Values.worker.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -33,57 +31,45 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.server.podSecurityContext | nindent 8 }}
-      initContainers:
-        - image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag | default .Chart.AppVersion }}"
-          name: create-database
-          command: ["invoke", "update"]
-          envFrom:
-            - configMapRef:
-                name: {{ include "inventree.fullname" . }}-server
+        {{- toYaml .Values.worker.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.server.securityContext | nindent 12 }}
-          image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.server.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 8000
-              protocol: TCP
+            {{- toYaml .Values.worker.securityContext | nindent 12 }}
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.server.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          command: ["invoke", "worker"]
           envFrom:
             - configMapRef:
                 name: {{ include "inventree.fullname" . }}-server
-            - secretRef:
-                name: {{ .Values.global.credentialsSecretName }}
           livenessProbe:
-            {{- toYaml .Values.server.livenessProbe | nindent 12 }}
+            {{- toYaml .Values.worker.livenessProbe | nindent 12 }}
           readinessProbe:
-            {{- toYaml .Values.server.readinessProbe | nindent 12 }}
+            {{- toYaml .Values.worker.readinessProbe | nindent 12 }}
           resources:
-            {{- toYaml .Values.server.resources | nindent 12 }}
+            {{- toYaml .Values.worker.resources | nindent 12 }}
           volumeMounts:
             - name: data
               mountPath: /home/inventree/data
-          {{- with .Values.server.volumeMounts }}
+          {{- with .Values.worker.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: {{ if .Values.global.persistentVolume.existingClaim }}{{ .Values.global.persistentVolume.existingClaim }}{{ else }}{{ include "inventree.fullname" . }}-data{{ end }}
-      {{- with .Values.server.volumes }}
+      {{- with .Values.worker.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.nodeSelector }}
+      {{- with .Values.worker.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.affinity }}
+      {{- with .Values.worker.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.server.tolerations }}
+      {{- with .Values.worker.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: creds
+type: Opaque
+stringData:
+  INVENTREE_ADMIN_EMAIL: me@example.com
+  INVENTREE_ADMIN_PASSWORD: hunter2
+  INVENTREE_ADMIN_USER: foo
+

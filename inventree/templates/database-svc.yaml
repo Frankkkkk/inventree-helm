@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "inventree.fullname" . }}-database
+  labels:
+    {{- include "inventree.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.database.service.type }}
+  ports:
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP
+      name: mysql
+
+  selector:
+    app: database
+    {{- include "inventree.selectorLabels" . | nindent 4 }}

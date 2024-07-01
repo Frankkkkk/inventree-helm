@@ -15,15 +15,28 @@ server:
   labels: {}
   podAnnotations: {}
   podLabels: {}
-
   podSecurityContext: {}
-    # fsGroup: 2000
+  securityContext: {}
 
+worker:
+  image:
+    repository: inventree/inventree
+    tag: stable
+    pullPolicy: IfNotPresent
+  labels: {}
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
   securityContext: {}
 
 global:
   siteUrl: ""
   credentialsSecretName: "" ## MUST CONTAIN INVENTREE_ADMIN_USER, INVENTREE_ADMIN_PASSWORD, INVENTREE_ADMIN_EMAIL
+  persistentVolume:
+    accessModes:
+    - ReadWriteOnce
+    size: 8Gi
+    storageClass: ""
 
 ingress:
   enabled: false

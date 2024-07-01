@@ -1,0 +1,28 @@
+{{- if not .Values.global.persistentVolume.existingClaim -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "inventree.fullname" . }}-data
+{{- with .Values.global.persistentVolume.annotations  }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "inventree.labels" . | nindent 4 }}
+spec:
+{{- with .Values.global.persistentVolume.accessModes }}
+  accessModes:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.global.persistentVolume.size | quote }}
+{{- if .Values.global.persistentVolume.storageClass }}
+  storageClassName: {{ .Values.global.persistentVolume.storageClass | quote }}
+{{- end }}
+{{- with .Values.global.persistentVolume.matchLabels }}
+  selector:
+    matchLabels:
+      {{- toYaml . | nindent 6 }}
+{{- end }}
+{{- end }}

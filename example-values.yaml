@@ -1,10 +1,12 @@
 ingress:
   enabled: true
   hosts:
-    - host: inventree.k3s.fr
+    - host: inventree.example.com
       paths:
         - path: /
           pathType: ImplementationSpecific
 global:
-  siteUrl : "http://inventree.k3s.fr"
+  siteUrl : "http://inventree.example.com"
   credentialsSecretName: "creds"
+
+
