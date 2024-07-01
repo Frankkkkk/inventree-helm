@@ -23,6 +23,7 @@ server:
 
 global:
   siteUrl: ""
+  credentialsSecretName: "" ## MUST CONTAIN INVENTREE_ADMIN_USER, INVENTREE_ADMIN_PASSWORD, INVENTREE_ADMIN_EMAIL
 
 ingress:
   enabled: false

@@ -26,6 +26,8 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      strategy:
+        type: Recreate
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -52,6 +54,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "inventree.fullname" . }}-server
+            - secretRef:
+                name: {{ .Values.global.credentialsSecretName }}
           livenessProbe:
             {{- toYaml .Values.server.livenessProbe | nindent 12 }}
           readinessProbe:

@@ -7,3 +7,4 @@ ingress:
           pathType: ImplementationSpecific
 global:
   siteUrl : "http://inventree.k3s.fr"
+  credentialsSecretName: "creds"
