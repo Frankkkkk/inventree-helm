@@ -1,0 +1,7 @@
+ingress:
+  enabled: true
+  hosts:
+    - host: inventree.k3s.fr
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
