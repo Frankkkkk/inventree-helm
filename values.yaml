@@ -5,3 +5,5 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+global:
+  siteUrl : "http://inventree.k3s.fr"

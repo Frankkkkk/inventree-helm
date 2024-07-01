@@ -8,8 +8,9 @@ spec:
   type: {{ .Values.server.service.type }}
   ports:
     - port: {{ .Values.server.service.port }}
-      targetPort: 3000
+      targetPort: 8000
       protocol: TCP
       name: http
   selector:
+    app: server
     {{- include "inventree.selectorLabels" . | nindent 4 }}

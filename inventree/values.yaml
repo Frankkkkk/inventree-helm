@@ -21,6 +21,9 @@ server:
 
   securityContext: {}
 
+global:
+  siteUrl: ""
+
 ingress:
   enabled: false
   className: ""
@@ -41,22 +44,20 @@ ingress:
 
 database:
   enabled: true
+  name: inventree
   image:
     repository: mariadb
     tag: 11.4
     pullPolicy: IfNotPresent
 
-  engine: mariadb
-  database: inventree
-
   persistentVolume:
-    accessModes: ReadWriteOnce
+    accessModes:
+    - ReadWriteOnce
     size: 8Gi
     storageClass: ""
 
-  volumeMounts:
-    - name: mariadb-persistent-storage
-      mountPath: /var/lib/mysql
+  service:
+    type: ClusterIP
 
 
 
